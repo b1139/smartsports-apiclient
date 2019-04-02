@@ -5,11 +5,11 @@ password = "TestUser";
 
 function resourceLoading(method, api_endpoint){
     URL = hostname+"/"+api_endpoint+"/";
-    alert('welcome resource loading');
+//    alert('welcome resource loading');
     $.ajax({
         url: URL,
         type: "get",
-        contentType: "text/html; charset=UTF-8",
+        contentType: "application/json",
         headers: { "Access-Control-Allow-Origin": "http://localhost",
 //                   'Content-Type': 'application/x-www-form-urlencoded',
                    "Access-Control-Allow-Credentials": true,
@@ -39,5 +39,57 @@ function loadTournaments(){
     resourceLoading("GET","tournament");
 }
 
+series = {
+            "name": "",
+            "date_start": "",
+            "date_end": "",
+};
 
-loadTournaments();
+tournament = {
+                "series": [
+                ],
+                "city": "",
+                "country": "",
+                "name": "",
+                "date_start": "",
+                "date_end": ""
+          };
+
+// Receives JSON Array and converts to JSON Object
+(function ($) {
+    $.fn.serializeFormJSON = function () {
+
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+})(jQuery);
+
+$(document).ready(function() {
+  $("#addtournament").submit(function(e){
+            e.preventDefault();
+            var data = $(this).serializeFormJSON();
+            alert(data.city);
+            tournament.city = data.city
+            tournament.country = data.country
+            tournament.date_start = data.date_start
+            tournament.date_end = data.date_end
+            alert(data.series);
+//            var formData = JSON.parse(JSON.stringify($('#addtournament').serializeArray()));
+//            for (x in formData) {
+//                alert(formData[x]);
+//            }
+//            alert(formData['series']);
+//            console.log(formData);
+         });
+   });
